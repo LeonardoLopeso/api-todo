@@ -1,7 +1,7 @@
 import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
-@Entity("users")
-export class User {
+@Entity("categories")
+export class Categories {
     @PrimaryGeneratedColumn()
     id: number;
 
@@ -9,13 +9,7 @@ export class User {
     name: string;
 
     @Column()
-    email: string;
-
-    @Column()
-    password: string;
-
-    @Column()
-    is_active: number;
+    color: string;
 
     @CreateDateColumn()
     created_at: Date;
