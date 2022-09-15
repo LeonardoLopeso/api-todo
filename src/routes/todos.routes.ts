@@ -6,3 +6,4 @@ const todosController = new TodosController();
 
 todosRouter.post('/', todosController.create);
 todosRouter.get('/', todosController.list);
+todosRouter.get('/', todosController.show);

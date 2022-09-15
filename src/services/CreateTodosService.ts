@@ -1,6 +1,6 @@
-import { hash } from "bcryptjs";
 import { Repository } from "typeorm";
 import dataSource from "../database";
+import { Categories } from "../entities/Categories";
 import { Todos } from "../entities/Todos";
 
 interface ITodo {
@@ -12,9 +12,11 @@ interface ITodo {
 
 class CreateTodosService {
     private todoRepository: Repository<Todos>;
+    private categoryRepository: Repository<Categories>;
 
     constructor() {
         this.todoRepository = dataSource.getRepository(Todos);
+        this.categoryRepository = dataSource.getRepository(Categories);
     }
 
     public async execute({
@@ -23,8 +25,14 @@ class CreateTodosService {
         user_id,
         category_id,
     }: ITodo): Promise<Todos>{
-        if(!name || !description) {
+        if(!name || !description || !user_id || !category_id) {
             throw new Error("Dados incompletos");
+        }
+
+        const categoryExists = await this.categoryRepository.findOne({ where:{ id: category_id } });
+
+        if(!categoryExists) {
+            throw new Error("Categoria inexistente");
         }
 
         const todo = this.todoRepository.create({
