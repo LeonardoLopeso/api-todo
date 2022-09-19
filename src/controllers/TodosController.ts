@@ -21,18 +21,19 @@ export class TodosController {
         try {
             const listTodosService = new ListTodosService();
             const todo = await listTodosService.execute({user_id});
-            return response.status(201).json(todo);
+            return response.status(200).json(todo);
         } catch (error) {
             return response.status(400).json({ message: error.message });
         }
     }
 
     async show( request: Request, response: Response ): Promise<Response> {
-        const { id, user_id } = request.body;
+        const { user_id } = request.body;
+        const { id } = request.params;
         try {
             const showTodosService = new ShowTodosService();
-            const todo = await showTodosService.execute({ id, user_id });
-            return response.status(201).json(todo);
+            const todo = await showTodosService.execute({ id: Number(id), user_id });
+            return response.status(200).json(todo);
         } catch (error) {
             return response.status(400).json({ message: error.message });
         }
