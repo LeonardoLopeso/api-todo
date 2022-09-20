@@ -5,11 +5,12 @@ import { ShowTodosService } from '../services/ShowTodosService';
 
 export class TodosController {
     async create( request: Request, response: Response ): Promise<Response> {
-        const { name, description, category_id, user_id } = request.body;
+        const { name, description, category_id } = request.body;
+        const { id } = request.user;
 
         try {
             const createTodosService = new CreateTodosService();
-            const todo = await createTodosService.execute({name, description, category_id, user_id});
+            const todo = await createTodosService.execute({name, description, category_id, user_id: Number(id)});
             return response.status(201).json(todo);
         } catch (error) {
             return response.status(400).json({ message: error.message });
@@ -17,10 +18,10 @@ export class TodosController {
     }
 
     async list( request: Request, response: Response ): Promise<Response> {
-        const { user_id } = request.body;
+        const { id } = request.user;
         try {
             const listTodosService = new ListTodosService();
-            const todo = await listTodosService.execute({user_id});
+            const todo = await listTodosService.execute({user_id: Number(id)});
             return response.status(200).json(todo);
         } catch (error) {
             return response.status(400).json({ message: error.message });
@@ -28,11 +29,11 @@ export class TodosController {
     }
 
     async show( request: Request, response: Response ): Promise<Response> {
-        const { user_id } = request.body;
+        const user_id = request.user.id;
         const { id } = request.params;
         try {
             const showTodosService = new ShowTodosService();
-            const todo = await showTodosService.execute({ id: Number(id), user_id });
+            const todo = await showTodosService.execute({ id: Number(id), user_id: Number(user_id) });
             return response.status(200).json(todo);
         } catch (error) {
             return response.status(400).json({ message: error.message });
